@@ -1,27 +1,26 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { CheckAuthStatus, loginUser, logoutUser, SignupUser } from "../helpers/api-communicators";
+import {
+  CheckAuthStatus,
+  loginUser,
+  logoutUser,
+  SignupUser,
+} from "../helpers/api-communicators";
 
 const AuthContext = createContext(null);
-
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-
-     async function checkStatus (){
-      
-        const data = await CheckAuthStatus();
-        if (data) {
-          setUser({ email: data.email, name: data.name });
-          setIsLoggedIn(true);
-        }
-
-        
-     
-     }
-     checkStatus();
+    async function checkStatus() {
+      const data = await CheckAuthStatus();
+      if (data) {
+        setUser({ email: data.email, name: data.name });
+        setIsLoggedIn(true);
+      }
+    }
+    checkStatus();
   }, []);
 
   const login = async (email, password) => {
@@ -33,18 +32,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (name, email, password) => {
-    const data = await SignupUser(name ,email, password);
+    const data = await SignupUser(name, email, password);
     if (data) {
       setUser({ email: data.email, name: data.name });
       setIsLoggedIn(true);
     }
   };
-  const logout = async() => {
-    await  logoutUser()
+  const logout = async () => {
+    await logoutUser();
     setUser("");
     setIsLoggedIn(false);
-    window.location.reload();
-
+    
   };
 
   const value = {
